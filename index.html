@@ -16,6 +16,12 @@
         <stop offset="60%" stop-color="#6fc3e8" stop-opacity="0.4"/>
         <stop offset="100%" stop-color="#6fc3e8" stop-opacity="0"/>
       </radialGradient>
+      <filter id="boil" x="-15%" y="-15%" width="130%" height="130%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.004 0.007" numOctaves="2" seed="7" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" xChannelSelector="R" yChannelSelector="G" scale="14">
+          <animate attributeName="scale" values="8;20;12;24;8" dur="2.6s" repeatCount="indefinite"/>
+        </feDisplacementMap>
+      </filter>
     </defs>
 
     <image href="scene-bg.png" x="0" y="0" width="3200" height="2000"/>
@@ -36,11 +42,11 @@
     <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-f.png" x="2155" y="790" width="180" height="160"/></a>
     <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-g.png" x="270" y="955" width="280" height="280"/></a>
     <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-h.png" x="2740" y="1020" width="180" height="140"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-i.png" x="280" y="1790" width="240" height="170"/></a>
+    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--boil" href="sprites/fish-i.png" x="280" y="1790" width="240" height="170"/></a>
 
     <!-- 해초 -> https://www.halfinmermaidtail.com -->
-    <a href="https://www.halfinmermaidtail.com" target="_blank" rel="noopener" class="hotspot"><title>halfinmermaidtail</title><image class="sprite sprite--kelp" href="sprites/kelp-left.png" x="480" y="660" width="540" height="1040"/></a>
-    <a href="https://www.halfinmermaidtail.com" target="_blank" rel="noopener" class="hotspot"><title>halfinmermaidtail</title><image class="sprite sprite--kelp" href="sprites/kelp-right.png" x="2330" y="680" width="490" height="1020"/></a>
+    <a href="https://www.halfinmermaidtail.com" target="_blank" rel="noopener" class="hotspot"><title>halfinmermaidtail</title><image class="sprite sprite--boil" href="sprites/kelp-left.png" x="480" y="600" width="540" height="1100"/></a>
+    <a href="https://www.halfinmermaidtail.com" target="_blank" rel="noopener" class="hotspot"><title>halfinmermaidtail</title><image class="sprite sprite--boil" href="sprites/kelp-right.png" x="2330" y="680" width="490" height="1020"/></a>
 
   </svg>
 </main>

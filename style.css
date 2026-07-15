@@ -41,8 +41,8 @@ html, body {
   transform-origin: 50% 50%;
 }
 
-.sprite--fish:hover,
-.sprite--fish:focus {
+.hotspot:hover .sprite--fish,
+.hotspot:focus .sprite--fish {
   animation: fish-wiggle 1.1s ease-in-out infinite;
 }
 
@@ -54,22 +54,13 @@ html, body {
   85%      { transform: translate(-5px, 4px) rotate(1deg); }
 }
 
-/* kelp sprites: swaying from a fixed root at the base, like a current */
-.sprite--kelp {
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
-}
-
-.sprite--kelp:hover,
-.sprite--kelp:focus {
-  animation: kelp-sway 2.4s ease-in-out infinite;
-}
-
-@keyframes kelp-sway {
-  0%, 100% { transform: rotate(0deg); }
-  25%      { transform: rotate(2.2deg); }
-  55%      { transform: rotate(-1.6deg); }
-  80%      { transform: rotate(1.2deg); }
+/* kelp and the sand-dwelling flatfish are drawn connected to their
+   surroundings, so instead of moving (which severs lines) they get a
+   hand-drawn "line boil" wobble via an SVG displacement filter that
+   keeps every stroke near its original position */
+.hotspot:hover .sprite--boil,
+.hotspot:focus .sprite--boil {
+  filter: url(#boil);
 }
 
 /* cave: a soft pulsing glow from within, no shape overlay */

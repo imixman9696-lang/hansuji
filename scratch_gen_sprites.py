@@ -1,8 +1,16 @@
 import numpy as np
 from PIL import Image
+from scipy import ndimage
 
 src = Image.open("main.png").convert("RGBA")
+arr_full = np.array(src)
+H, W = arr_full.shape[:2]
 
+ink = (arr_full[:, :, 0] < 248) | (arr_full[:, :, 1] < 248) | (arr_full[:, :, 2] < 248)
+labels, n = ndimage.label(ink, structure=np.ones((3, 3), dtype=int))
+objects = ndimage.find_objects(labels)
+
+# sprite canvas rectangles (also used verbatim in index.html)
 boxes = {
     "fish-a": (800, 260, 1180, 620),
     "fish-b": (1750, 345, 1970, 565),
@@ -13,67 +21,131 @@ boxes = {
     "fish-g": (270, 955, 550, 1235),
     "fish-h": (2740, 1020, 2920, 1160),
     "fish-i": (280, 1790, 520, 1960),
-    "kelp-left": (480, 660, 1020, 1700),
+    "kelp-left": (480, 600, 1020, 1700),
     "kelp-right": (2330, 680, 2820, 1700),
 }
 
-# raw rectangles (not tracked as their own sprites) purely used to keep
-# rock/coral/urchin clutter at the base of the kelp out of the kelp sprite
-extra_exclusion_zones = {
+# a point on each fish body; the connected ink component under (or near) the
+# seed is the fish outline, and every component nested in its bbox (eyes,
+# stripes) is pulled in with it
+fish_seeds = {
+    "fish-a": [(995, 440), (870, 590)],
+    "fish-b": [(1860, 455)],
+    "fish-c": [(2430, 550)],
+    "fish-d": [(820, 585), (545, 650), (505, 695), (615, 700), (555, 743), (865, 747), (905, 778)],
+    "fish-e": [(1080, 865)],
+    "fish-f": [(2240, 925)],
+    "fish-g": [(410, 1095)],
+    "fish-h": [(2835, 1095)],
+    "fish-i": [(395, 1835)],
+}
+
+# base clutter (rocks/coral/urchins) to keep out of the kelp sprites
+kelp_exclusion_zones = {
     "kelp-left": [
-        (470, 1280, 660, 1700),   # left coral bush
-        (660, 1570, 890, 1700),   # round pinecone coral
-        (860, 1330, 1030, 1700),  # right-side coral bush
+        (470, 1280, 660, 1700),
+        (660, 1570, 890, 1700),
+        (860, 1330, 1030, 1700),
     ],
     "kelp-right": [
-        (2270, 1230, 2430, 1700),  # left coral bush
-        (2420, 1370, 2710, 1700),  # rock base
-        (2670, 1440, 2830, 1700),  # right coral cluster
+        (2270, 1230, 2430, 1700),
+        (2420, 1370, 2710, 1700),
+        (2670, 1440, 2830, 1700),
     ],
 }
 
-# boxes of other tracked objects that spatially overlap a given box and must
-# be excluded from it (that sub-area is owned by the other object instead)
-exclusions = {
-    "kelp-left": ["fish-d", "fish-g", "fish-e"],
-    "kelp-right": ["fish-f", "fish-c"],
-}
+
+def label_at(x, y, r_max=30):
+    if ink[y, x]:
+        return labels[y, x]
+    for r in range(1, r_max + 1):
+        y0, y1 = max(0, y - r), min(H, y + r + 1)
+        x0, x1 = max(0, x - r), min(W, x + r + 1)
+        win = labels[y0:y1, x0:x1]
+        nz = win[win > 0]
+        if nz.size:
+            return nz[0]
+    return 0
 
 
-def matte_white(crop):
-    arr = np.array(crop)
-    white_mask = (arr[:, :, 0] >= 248) & (arr[:, :, 1] >= 248) & (arr[:, :, 2] >= 248)
-    arr[white_mask, 3] = 0
-    return arr
+def comp_bbox(lab):
+    sl = objects[lab - 1]
+    return (sl[1].start, sl[0].start, sl[1].stop, sl[0].stop)  # x0,y0,x1,y1
 
 
-sprite_arrays = {}
+# fish masks: a component belongs to a fish when it fits inside the fish's
+# canvas box AND touches the padded bbox of a seed component. The seed may hit
+# a small detail (gill mark), so the pad lets the full outline join via
+# intersection rather than containment.
+PAD = 20
+fish_labels = {}          # sprite name -> set of labels
+all_fish_label_set = set()
+comp_bboxes = [comp_bbox(l) for l in range(1, n + 1)]
+
+for name, seeds in fish_seeds.items():
+    box = boxes[name]
+    cores = set()
+    for (x, y) in seeds:
+        lab = label_at(x, y)
+        if lab:
+            cores.add(lab)
+    regions = []
+    for lab in cores:
+        bx0, by0, bx1, by1 = comp_bbox(lab)
+        regions.append((bx0 - PAD, by0 - PAD, bx1 + PAD, by1 + PAD))
+    members = set(cores)
+    changed = True
+    while changed:      # grow until stable so chains of touching parts join
+        changed = False
+        for lab in range(1, n + 1):
+            if lab in members:
+                continue
+            cx0, cy0, cx1, cy1 = comp_bboxes[lab - 1]
+            if not (cx0 >= box[0] and cy0 >= box[1] and cx1 <= box[2] and cy1 <= box[3]):
+                continue
+            for (rx0, ry0, rx1, ry1) in regions:
+                if cx0 < rx1 and cx1 > rx0 and cy0 < ry1 and cy1 > ry0:
+                    members.add(lab)
+                    regions.append((cx0 - PAD, cy0 - PAD, cx1 + PAD, cy1 + PAD))
+                    changed = True
+                    break
+    fish_labels[name] = members
+    all_fish_label_set |= members
+    print(name, "components:", len(members))
+
+fish_pixel_mask = np.isin(labels, list(all_fish_label_set))
+
+sprite_masks = {}
 for name, box in boxes.items():
     x0, y0, x1, y1 = box
-    crop = src.crop(box).copy()
-    arr = matte_white(crop)
+    local_ink = ink[y0:y1, x0:x1]
+    if name == "fish-i":
+        # flatfish outline is fused with the sand line into one component, so
+        # component ownership can't isolate it — take all ink in the box and
+        # animate it with the seam-friendly boil filter instead of a wiggle
+        local = local_ink.copy()
+    elif name.startswith("fish"):
+        local = np.isin(labels[y0:y1, x0:x1], list(fish_labels[name]))
+    else:
+        local = local_ink & ~fish_pixel_mask[y0:y1, x0:x1]
+        for (zx0, zy0, zx1, zy1) in kelp_exclusion_zones.get(name, []):
+            ix0, iy0 = max(x0, zx0), max(y0, zy0)
+            ix1, iy1 = min(x1, zx1), min(y1, zy1)
+            if ix0 < ix1 and iy0 < iy1:
+                local[iy0 - y0:iy1 - y0, ix0 - x0:ix1 - x0] = False
+    sprite_masks[name] = local
 
-    ex_boxes = [boxes[other] for other in exclusions.get(name, [])]
-    ex_boxes += extra_exclusion_zones.get(name, [])
-    for (ox0, oy0, ox1, oy1) in ex_boxes:
-        # intersect with this box, translate to local coords
-        ix0, iy0 = max(x0, ox0), max(y0, oy0)
-        ix1, iy1 = min(x1, ox1), min(y1, oy1)
-        if ix0 < ix1 and iy0 < iy1:
-            lx0, ly0, lx1, ly1 = ix0 - x0, iy0 - y0, ix1 - x0, iy1 - y0
-            arr[ly0:ly1, lx0:lx1, 3] = 0
+    out = arr_full[y0:y1, x0:x1].copy()
+    out[:, :, 3] = np.where(local, 255, 0)
+    Image.fromarray(out).save(f"sprites/{name}.png")
 
-    sprite_arrays[name] = arr
-    Image.fromarray(arr, "RGBA").save(f"sprites/{name}.png")
-
-scene = src.copy()
+# scene background: original with every sprite's ink painted white
+scene = arr_full.copy()
 for name, box in boxes.items():
     x0, y0, x1, y1 = box
-    arr = sprite_arrays[name]
-    sprite_img = Image.fromarray(arr, "RGBA")
-    white_patch = Image.new("RGBA", sprite_img.size, (255, 255, 255, 255))
-    mask = sprite_img.split()[3]
-    scene.paste(white_patch, (x0, y0), mask=mask)
+    m = sprite_masks[name]
+    region = scene[y0:y1, x0:x1]
+    region[m] = [255, 255, 255, 255]
 
-scene.save("scene-bg.png")
-print("done", scene.size)
+Image.fromarray(scene).save("scene-bg.png")
+print("done")
