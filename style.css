@@ -1,0 +1,103 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  font-family: -apple-system, "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
+
+/* ---------- index.html : hero ---------- */
+
+.hero-frame {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.hero-links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hotspot circle,
+.hotspot ellipse {
+  fill: rgba(0, 0, 0, 0);
+  stroke: transparent;
+  stroke-width: 4;
+  transition: fill 0.25s ease, stroke 0.25s ease;
+  cursor: pointer;
+}
+
+.hotspot:hover circle,
+.hotspot:hover ellipse,
+.hotspot:focus circle,
+.hotspot:focus ellipse {
+  fill: rgba(74, 158, 217, 0.16);
+  stroke: rgba(35, 110, 170, 0.55);
+}
+
+.hotspot:focus {
+  outline: none;
+}
+
+/* ---------- about.html ---------- */
+
+.about-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #eaf6fb 0%, #d4ecf5 60%, #c3e4f0 100%);
+  padding: 8vh 6vw;
+  text-align: center;
+}
+
+.about-page .company-name {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: #123a52;
+  letter-spacing: 0.02em;
+  margin-bottom: 1.25rem;
+}
+
+.about-page .company-intro {
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: #35566b;
+  line-height: 1.8;
+  max-width: 640px;
+  margin-bottom: 3rem;
+}
+
+.about-page .back-link {
+  display: inline-block;
+  padding: 0.7rem 1.6rem;
+  border: 1px solid #2c7ba8;
+  border-radius: 999px;
+  color: #2c7ba8;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.about-page .back-link:hover {
+  background: #2c7ba8;
+  color: #ffffff;
+}
