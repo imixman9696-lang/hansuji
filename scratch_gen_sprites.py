@@ -171,4 +171,36 @@ for name, box in boxes.items():
 scene[ty0:ty1, tx0:tx1][diff & ink_a] = [255, 255, 255, 255]
 
 Image.fromarray(scene).save("scene-bg.png")
+
+# bubbles: everything that differs between main.png and main3.png outside the
+# text box. Some sit on the black cave interior, so alpha comes from the diff
+# itself (not ink thresholds) and RGB from main3.
+arr3_full = np.array(Image.open("main3.png").convert("RGBA"))
+d3 = np.abs(arr3_full[:, :, :3].astype(int) - arr_full[:, :, :3].astype(int)).sum(axis=2) > 30
+d3[ty0:ty1, tx0:tx1] = False          # text swap region is not a bubble
+d3_soft = ndimage.binary_dilation(d3, iterations=2)
+blob_lab, blob_n = ndimage.label(ndimage.binary_dilation(d3, iterations=6))
+blob_sizes = ndimage.sum(d3, blob_lab, range(1, blob_n + 1))
+
+entries = []
+for i in range(1, blob_n + 1):
+    if blob_sizes[i - 1] < 50:
+        continue
+    m = (blob_lab == i) & d3_soft
+    ys, xs = np.where(m)
+    bx0, by0, bx1, by1 = xs.min() - 3, ys.min() - 3, xs.max() + 4, ys.max() + 4
+    out = arr3_full[by0:by1, bx0:bx1].copy()
+    out[:, :, 3] = np.where(m[by0:by1, bx0:bx1], 255, 0)
+    name = f"bubble-{len(entries):02d}"
+    Image.fromarray(out).save(f"sprites/{name}.png")
+    entries.append((name, bx0, by0, bx1 - bx0, by1 - by0, (by0 + by1) / 2))
+
+# bottom bubbles appear first, as if rising out of the cave
+entries.sort(key=lambda e: -e[5])
+with open("bubbles.html", "w", encoding="utf-8") as f:
+    for rank, (name, x, y, w, h, cy) in enumerate(entries):
+        delay = round((1470 - cy) / 1350 * 2.0, 2)
+        f.write(f'      <image class="bubble" style="--d:{max(0.0, delay)}s" '
+                f'href="sprites/{name}.png" x="{x}" y="{y}" width="{w}" height="{h}"/>\n')
+print("bubbles:", len(entries))
 print("done")

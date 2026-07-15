@@ -82,6 +82,36 @@ html, body {
   filter: url(#boil);
 }
 
+/* cave hover: bubbles pop into existence from the cave mouth upward,
+   each with a staggered delay (--d) set per bubble in the markup */
+.bubble-group {
+  pointer-events: none;
+}
+
+.bubble {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.hotspot--about:hover + .bubble-group .bubble,
+.hotspot--about:focus + .bubble-group .bubble {
+  animation:
+    bubble-pop 0.45s ease-out var(--d) both,
+    bubble-float 3s ease-in-out calc(var(--d) + 0.45s) infinite;
+}
+
+@keyframes bubble-pop {
+  from { opacity: 0; transform: translateY(26px) scale(0.3); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes bubble-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
 /* cave: a soft pulsing glow from within, no shape overlay */
 .cave-glow {
   opacity: 0;
