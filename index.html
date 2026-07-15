@@ -8,36 +8,39 @@
 </head>
 <body>
 <main class="hero-frame">
-  <img class="hero-image" src="main.png" alt="한수지 작가가 그린 바다속 드로잉">
+  <svg class="hero-svg" viewBox="0 0 3200 2000" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
 
-  <svg class="hero-links" viewBox="0 0 3200 2000" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="caveGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#bfeeff" stop-opacity="0.9"/>
+        <stop offset="60%" stop-color="#6fc3e8" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#6fc3e8" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
 
-    <!-- 동굴 입구 -> 회사소개 페이지 -->
+    <image href="scene-bg.png" x="0" y="0" width="3200" height="2000"/>
+
+    <!-- 동굴 입구 -> 회사소개 -->
     <a href="about.html" class="hotspot hotspot--about">
       <title>회사소개</title>
-      <ellipse cx="1700" cy="1400" rx="280" ry="380"/>
+      <ellipse cx="1700" cy="1400" rx="280" ry="380" fill="rgba(0,0,0,0)"/>
+      <ellipse class="cave-glow" cx="1700" cy="1440" rx="190" ry="230" fill="url(#caveGlow)"/>
     </a>
 
-    <!-- 물고기들 -> https://smartstore.naver.com/mermaidjeju -->
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="995" cy="440" r="100"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="1860" cy="455" r="70"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="2430" cy="550" r="110"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="820" cy="585" r="55"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="545" cy="650" r="45"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="505" cy="695" r="45"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="615" cy="700" r="45"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="555" cy="743" r="45"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="865" cy="747" r="55"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="905" cy="778" r="45"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="1080" cy="865" r="90"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="2240" cy="925" r="75"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="410" cy="1095" r="100"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="2835" cy="1095" r="80"/></a>
-    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot hotspot--fish"><title>스마트스토어</title><circle cx="395" cy="1835" r="90"/></a>
+    <!-- 물고기 -> https://smartstore.naver.com/mermaidjeju -->
+    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-a.png" x="800" y="260" width="380" height="360"/></a>
+    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-b.png" x="1750" y="345" width="220" height="220"/></a>
+    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-c.png" x="2280" y="400" width="300" height="300"/></a>
+    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-d.png" x="430" y="500" width="550" height="353"/></a>
+    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-e.png" x="1000" y="730" width="230" height="170"/></a>
+    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-f.png" x="2155" y="790" width="180" height="160"/></a>
+    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-g.png" x="270" y="955" width="280" height="280"/></a>
+    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-h.png" x="2740" y="1020" width="180" height="140"/></a>
+    <a href="https://smartstore.naver.com/mermaidjeju" target="_blank" rel="noopener" class="hotspot"><title>스마트스토어</title><image class="sprite sprite--fish" href="sprites/fish-i.png" x="280" y="1790" width="240" height="170"/></a>
 
     <!-- 해초 -> https://www.halfinmermaidtail.com -->
-    <a href="https://www.halfinmermaidtail.com" target="_blank" rel="noopener" class="hotspot hotspot--kelp"><title>halfinmermaidtail</title><ellipse cx="750" cy="1050" rx="220" ry="350"/></a>
-    <a href="https://www.halfinmermaidtail.com" target="_blank" rel="noopener" class="hotspot hotspot--kelp"><title>halfinmermaidtail</title><ellipse cx="2500" cy="1150" rx="220" ry="350"/></a>
+    <a href="https://www.halfinmermaidtail.com" target="_blank" rel="noopener" class="hotspot"><title>halfinmermaidtail</title><image class="sprite sprite--kelp" href="sprites/kelp-left.png" x="480" y="660" width="540" height="1040"/></a>
+    <a href="https://www.halfinmermaidtail.com" target="_blank" rel="noopener" class="hotspot"><title>halfinmermaidtail</title><image class="sprite sprite--kelp" href="sprites/kelp-right.png" x="2330" y="680" width="490" height="1020"/></a>
 
   </svg>
 </main>

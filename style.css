@@ -20,42 +20,76 @@ html, body {
   overflow: hidden;
 }
 
-.hero-image {
+.hero-svg {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
   user-select: none;
-  -webkit-user-drag: none;
 }
 
-.hero-links {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.hotspot circle,
-.hotspot ellipse {
-  fill: rgba(0, 0, 0, 0);
-  stroke: transparent;
-  stroke-width: 4;
-  transition: fill 0.25s ease, stroke 0.25s ease;
+.hero-svg a {
   cursor: pointer;
 }
 
-.hotspot:hover circle,
-.hotspot:hover ellipse,
-.hotspot:focus circle,
-.hotspot:focus ellipse {
-  fill: rgba(74, 158, 217, 0.16);
-  stroke: rgba(35, 110, 170, 0.55);
+.hero-svg a:focus {
+  outline: none;
 }
 
-.hotspot:focus {
-  outline: none;
+/* fish sprites: a light, springy wiggle in place */
+.sprite--fish {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.sprite--fish:hover,
+.sprite--fish:focus {
+  animation: fish-wiggle 1.1s ease-in-out infinite;
+}
+
+@keyframes fish-wiggle {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  20%      { transform: translate(14px, -10px) rotate(-4deg); }
+  45%      { transform: translate(-8px, 8px) rotate(3deg); }
+  70%      { transform: translate(10px, -6px) rotate(-2deg); }
+  85%      { transform: translate(-5px, 4px) rotate(1deg); }
+}
+
+/* kelp sprites: swaying from a fixed root at the base, like a current */
+.sprite--kelp {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.sprite--kelp:hover,
+.sprite--kelp:focus {
+  animation: kelp-sway 2.4s ease-in-out infinite;
+}
+
+@keyframes kelp-sway {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(2.2deg); }
+  55%      { transform: rotate(-1.6deg); }
+  80%      { transform: rotate(1.2deg); }
+}
+
+/* cave: a soft pulsing glow from within, no shape overlay */
+.cave-glow {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  pointer-events: none;
+}
+
+.hotspot--about:hover .cave-glow,
+.hotspot--about:focus .cave-glow {
+  opacity: 1;
+  animation: cave-glow 1.8s ease-in-out infinite;
+}
+
+@keyframes cave-glow {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%      { opacity: 0.7; transform: scale(1.1); }
 }
 
 /* ---------- about.html ---------- */
@@ -63,41 +97,14 @@ html, body {
 .about-page {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: linear-gradient(180deg, #eaf6fb 0%, #d4ecf5 60%, #c3e4f0 100%);
-  padding: 8vh 6vw;
   text-align: center;
 }
 
 .about-page .company-name {
-  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
   color: #123a52;
   letter-spacing: 0.02em;
-  margin-bottom: 1.25rem;
-}
-
-.about-page .company-intro {
-  font-size: clamp(1rem, 1.6vw, 1.2rem);
-  color: #35566b;
-  line-height: 1.8;
-  max-width: 640px;
-  margin-bottom: 3rem;
-}
-
-.about-page .back-link {
-  display: inline-block;
-  padding: 0.7rem 1.6rem;
-  border: 1px solid #2c7ba8;
-  border-radius: 999px;
-  color: #2c7ba8;
-  text-decoration: none;
-  font-size: 0.95rem;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.about-page .back-link:hover {
-  background: #2c7ba8;
-  color: #ffffff;
 }
