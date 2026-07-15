@@ -145,6 +145,55 @@ html, body {
   50%      { opacity: 0.7; transform: scale(1.1); }
 }
 
+/* touch devices have no hover, so everything stays gently alive:
+   fish swim, kelp and the flatfish boil, the cave glows, bubbles rise
+   in looping waves, and the stone text alternates between scripts */
+@media (hover: none) {
+  .sprite--fish {
+    animation: fish-wiggle 1.8s ease-in-out infinite;
+  }
+
+  .sprite--boil {
+    filter: url(#boil);
+  }
+
+  .cave-glow {
+    opacity: 1;
+    animation: cave-glow 2.4s ease-in-out infinite;
+  }
+
+  .bubble {
+    animation: bubble-cycle 5s ease-in-out var(--d) infinite;
+  }
+
+  .sprite--text-hanja {
+    animation: hanja-cycle 10s ease-in-out infinite;
+  }
+
+  .sprite--text-en {
+    animation: en-cycle 10s ease-in-out infinite;
+  }
+}
+
+@keyframes bubble-cycle {
+  0%   { opacity: 0; transform: translateY(26px) scale(0.4); }
+  22%  { opacity: 1; transform: translateY(0) scale(1); }
+  70%  { opacity: 1; transform: translateY(-14px) scale(1); }
+  100% { opacity: 0; transform: translateY(-30px) scale(0.9); }
+}
+
+@keyframes hanja-cycle {
+  0%, 42%   { opacity: 1; }
+  52%, 90%  { opacity: 0; }
+  100%      { opacity: 1; }
+}
+
+@keyframes en-cycle {
+  0%, 42%   { opacity: 0; }
+  52%, 90%  { opacity: 1; }
+  100%      { opacity: 0; }
+}
+
 /* ---------- about.html ---------- */
 
 .about-page {
