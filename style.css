@@ -54,6 +54,25 @@ html, body {
   85%      { transform: translate(-5px, 4px) rotate(1deg); }
 }
 
+/* stone text: 한문 fades away and the English carving fades in */
+.sprite--text-hanja {
+  opacity: 1;
+  transition: opacity 0.7s ease;
+}
+
+.sprite--text-en {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.text-swap:hover .sprite--text-hanja {
+  opacity: 0;
+}
+
+.text-swap:hover .sprite--text-en {
+  opacity: 1;
+}
+
 /* kelp and the sand-dwelling flatfish are drawn connected to their
    surroundings, so instead of moving (which severs lines) they get a
    hand-drawn "line boil" wobble via an SVG displacement filter that

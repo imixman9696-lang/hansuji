@@ -139,6 +139,27 @@ for name, box in boxes.items():
     out[:, :, 3] = np.where(local, 255, 0)
     Image.fromarray(out).save(f"sprites/{name}.png")
 
+# stone-text swap: the 海友 text (main.png) fades into HAEWOO (main2.png).
+# Only pixels that differ between the two versions belong to the text, so the
+# stone speckles around it stay in the background untouched.
+arr2_full = np.array(Image.open("main2.png").convert("RGBA"))
+TEXT_BOX = (1420, 655, 1740, 860)
+tx0, ty0, tx1, ty1 = TEXT_BOX
+a = arr_full[ty0:ty1, tx0:tx1]
+b = arr2_full[ty0:ty1, tx0:tx1]
+diff = np.abs(a[:, :, :3].astype(int) - b[:, :, :3].astype(int)).sum(axis=2) > 30
+diff = ndimage.binary_dilation(diff, iterations=2)
+ink_a = (a[:, :, 0] < 248) | (a[:, :, 1] < 248) | (a[:, :, 2] < 248)
+ink_b = (b[:, :, 0] < 248) | (b[:, :, 1] < 248) | (b[:, :, 2] < 248)
+
+hanja = a.copy()
+hanja[:, :, 3] = np.where(diff & ink_a, 255, 0)
+Image.fromarray(hanja).save("sprites/text-hanja.png")
+
+english = b.copy()
+english[:, :, 3] = np.where(diff & ink_b, 255, 0)
+Image.fromarray(english).save("sprites/text-en.png")
+
 # scene background: original with every sprite's ink painted white
 scene = arr_full.copy()
 for name, box in boxes.items():
@@ -146,6 +167,8 @@ for name, box in boxes.items():
     m = sprite_masks[name]
     region = scene[y0:y1, x0:x1]
     region[m] = [255, 255, 255, 255]
+
+scene[ty0:ty1, tx0:tx1][diff & ink_a] = [255, 255, 255, 255]
 
 Image.fromarray(scene).save("scene-bg.png")
 print("done")
