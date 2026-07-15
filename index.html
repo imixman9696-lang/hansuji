@@ -123,5 +123,19 @@
 
   </svg>
 </main>
+<script>
+(function () {
+  var frame = document.querySelector('.hero-frame');
+  function centerCave() {
+    var overflow = frame.scrollWidth - frame.clientWidth;
+    if (overflow > 0) {
+      // cave center sits at x=1700 of the 3200-wide scene
+      frame.scrollLeft = frame.scrollWidth * (1700 / 3200) - frame.clientWidth / 2;
+    }
+  }
+  window.addEventListener('load', centerCave);
+  window.addEventListener('resize', centerCave);
+})();
+</script>
 </body>
 </html>

@@ -27,6 +27,21 @@ html, body {
   user-select: none;
 }
 
+/* on portrait screens the scene fills the full height and can be swiped
+   sideways; a script centers the view on the cave at load */
+@media (max-aspect-ratio: 1/1) {
+  .hero-frame {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hero-svg {
+    width: 160vh;   /* viewBox is 3200x2000, so width = height * 1.6 */
+    height: 100vh;
+  }
+}
+
 .hero-svg a {
   cursor: pointer;
 }
