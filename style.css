@@ -27,19 +27,17 @@ html, body {
   user-select: none;
 }
 
-/* on portrait screens the scene fills the full height and can be swiped
-   sideways; a script centers the view on the cave at load */
-@media (max-aspect-ratio: 1/1) {
-  .hero-frame {
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-  }
+/* portrait intro: open zoomed in on the cave entrance, then pull back
+   until the whole scene fits. --zoom / --oy are computed by the script
+   from the actual viewport so the cave fills the screen at the start. */
+.hero-svg.zoom-intro {
+  transform-origin: 53.125% var(--oy, 70%);
+  animation: hero-zoom-out 3s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+}
 
-  .hero-svg {
-    width: 160vh;   /* viewBox is 3200x2000, so width = height * 1.6 */
-    height: 100vh;
-  }
+@keyframes hero-zoom-out {
+  from { transform: scale(var(--zoom, 3.4)); }
+  to   { transform: scale(1); }
 }
 
 .hero-svg a {

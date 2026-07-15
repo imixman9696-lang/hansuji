@@ -125,16 +125,17 @@
 </main>
 <script>
 (function () {
-  var frame = document.querySelector('.hero-frame');
-  function centerCave() {
-    var overflow = frame.scrollWidth - frame.clientWidth;
-    if (overflow > 0) {
-      // cave center sits at x=1700 of the 3200-wide scene
-      frame.scrollLeft = frame.scrollWidth * (1700 / 3200) - frame.clientWidth / 2;
-    }
-  }
-  window.addEventListener('load', centerCave);
-  window.addEventListener('resize', centerCave);
+  // portrait intro: start zoomed on the cave (x=1700, y=1400 of the
+  // 3200x2000 scene), then the CSS animation pulls back to the full view
+  if (!matchMedia('(max-aspect-ratio: 1/1)').matches) return;
+  var svg = document.querySelector('.hero-svg');
+  var rect = svg.getBoundingClientRect();
+  var imgH = rect.width / 1.6;                    // letterboxed image height
+  var zoom = rect.height / imgH;                  // scale where image fills the height
+  var oy = ((rect.height - imgH) / 2 + imgH * (1400 / 2000)) / rect.height * 100;
+  svg.style.setProperty('--zoom', zoom.toFixed(3));
+  svg.style.setProperty('--oy', oy.toFixed(2) + '%');
+  svg.classList.add('zoom-intro');
 })();
 </script>
 </body>
