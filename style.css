@@ -108,8 +108,13 @@ html, body {
   transform-origin: 50% 50%;
 }
 
-.hotspot--about:hover + .bubble-group .bubble,
-.hotspot--about:focus + .bubble-group .bubble {
+/* bubbles above the cave mouth loop on their own, always */
+.bubble--top {
+  animation: bubble-cycle 5s ease-in-out var(--d) infinite;
+}
+
+.hotspot--about:hover + .bubble-group .bubble:not(.bubble--top),
+.hotspot--about:focus + .bubble-group .bubble:not(.bubble--top) {
   animation:
     bubble-pop 0.45s ease-out var(--d) both,
     bubble-float 3s ease-in-out calc(var(--d) + 0.45s) infinite;
